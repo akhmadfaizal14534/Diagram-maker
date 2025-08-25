@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { DiagramData, DiagramEngine, FlowNode, FlowEdge } from '../types/diagram';
+import html2canvas from 'html2canvas';
 
 const DEFAULT_DIAGRAM_CODE = {
   mermaid: `flowchart LR
@@ -24,7 +25,6 @@ export function useDiagramData() {
   const [code, setCode] = useState(DEFAULT_DIAGRAM_CODE.mermaid);
   const [nodes, setNodes] = useState<FlowNode[]>([]);
   const [edges, setEdges] = useState<FlowEdge[]>([]);
-  const [mode, setMode] = useState<'preview' | 'editor'>('preview');
 
   const handleEngineChange = useCallback((newEngine: DiagramEngine) => {
     setEngine(newEngine);
@@ -80,18 +80,63 @@ export function useDiagramData() {
     reader.readAsText(file);
   }, []);
 
+  const exportImage = useCallback(async (format: 'png' | 'jpg' | 'jpeg') => {
+    try {
+      // Find the diagram preview element
+      const previewElement = document.querySelector('[data-diagram-preview]') as HTMLElement;
+      if (!previewElement) {
+        // Fallback to finding common diagram containers
+        const fallbackElement = document.querySelector('.mermaid, svg, [class*="diagram"]') as HTMLElement;
+        if (!fallbackElement) {
+          alert('No diagram found to export');
+          return;
+        }
+        await captureAndDownload(fallbackElement, format);
+        return;
+      }
+      
+      await captureAndDownload(previewElement, format);
+    } catch (error) {
+      console.error('Failed to export image:', error);
+      alert('Failed to export image. Please try again.');
+    }
+  }, []);
+
+  const captureAndDownload = async (element: HTMLElement, format: 'png' | 'jpg' | 'jpeg') => {
+    const canvas = await html2canvas(element, {
+      backgroundColor: format === 'png' ? null : '#ffffff',
+      scale: 2, // Higher quality
+      useCORS: true,
+      allowTaint: true,
+    });
+    
+    const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
+    const quality = format === 'png' ? undefined : 0.9;
+    
+    canvas.toBlob((blob) => {
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `diagram-${Date.now()}.${format}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    }, mimeType, quality);
+  };
   return {
     engine,
     code,
     nodes,
     edges,
-    mode,
     setEngine: handleEngineChange,
     setCode,
     setNodes,
     setEdges,
-    setMode,
     exportDiagram,
     importDiagram
+    exportImage,
   };
 }

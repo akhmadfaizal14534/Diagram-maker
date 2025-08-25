@@ -16,7 +16,7 @@ export function D2Renderer({ code }: D2RendererProps) {
   // Placeholder implementation for D2
   // In a real implementation, you would integrate with D2's WASM module
   return (
-    <div className="w-full h-full overflow-auto p-4">
+    <div className="w-full h-full overflow-auto p-4" data-diagram-preview>
       <div className="flex flex-col items-center justify-center min-h-full space-y-4">
         <div className="w-64 h-48 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg flex items-center justify-center">
           <div className="text-center">

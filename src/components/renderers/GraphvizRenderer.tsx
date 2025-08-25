@@ -67,7 +67,7 @@ export function GraphvizRenderer({ code }: GraphvizRendererProps) {
   }
 
   return (
-    <div className="w-full h-full overflow-auto p-4">
+    <div className="w-full h-full overflow-auto p-4" data-diagram-preview>
       {svgContent && (
         <div 
           className="flex justify-center items-center min-h-full"

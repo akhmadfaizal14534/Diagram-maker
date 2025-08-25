@@ -77,7 +77,7 @@ export function PlantUMLRenderer({ code }: PlantUMLRendererProps) {
   }
 
   return (
-    <div className="w-full h-full overflow-auto p-4">
+    <div className="w-full h-full overflow-auto p-4" data-diagram-preview>
       {imageUrl && (
         <div className="flex justify-center items-center min-h-full">
           <img

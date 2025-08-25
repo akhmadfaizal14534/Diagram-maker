@@ -3,17 +3,16 @@ import { DiagramEngine } from '../types/diagram';
 import { Button } from './ui/Button';
 import { Select } from './ui/Select';
 import { Textarea } from './ui/Textarea';
-import { FileUp, Download } from 'lucide-react';
+import { FileUp, Download, Image } from 'lucide-react';
 
 interface DiagramInputProps {
   engine: DiagramEngine;
   code: string;
-  mode: 'preview' | 'editor';
   onEngineChange: (engine: DiagramEngine) => void;
   onCodeChange: (code: string) => void;
-  onModeToggle: () => void;
   onExport: () => void;
   onImport: (file: File) => void;
+  onExportImage: (format: 'png' | 'jpg' | 'jpeg') => void;
 }
 
 const ENGINE_OPTIONS = [
@@ -26,13 +25,14 @@ const ENGINE_OPTIONS = [
 export function DiagramInput({
   engine,
   code,
-  mode,
   onEngineChange,
   onCodeChange,
-  onModeToggle,
   onExport,
   onImport,
+  onExportImage,
 }: DiagramInputProps) {
+  const [showImageExport, setShowImageExport] = React.useState(false);
+
   const handleFileImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -41,6 +41,10 @@ export function DiagramInput({
     }
   };
 
+  const handleImageExport = (format: 'png' | 'jpg' | 'jpeg') => {
+    onExportImage(format);
+    setShowImageExport(false);
+  };
   return (
     <div className="flex flex-col h-full space-y-4 p-4 bg-slate-50 dark:bg-slate-900">
       {/* Header Controls */}
@@ -53,14 +57,6 @@ export function DiagramInput({
         />
         <div className="flex gap-2">
           <Button
-            onClick={onModeToggle}
-            variant="outline"
-            size="sm"
-            className="whitespace-nowrap"
-          >
-            {mode === 'preview' ? 'Switch to Editor' : 'Switch to Preview'}
-          </Button>
-          <Button
             onClick={onExport}
             variant="outline"
             size="sm"
@@ -69,6 +65,39 @@ export function DiagramInput({
             <Download className="w-4 h-4" />
             Export
           </Button>
+          <div className="relative">
+            <Button
+              onClick={() => setShowImageExport(!showImageExport)}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Image className="w-4 h-4" />
+              Image
+            </Button>
+            {showImageExport && (
+              <div className="absolute top-full left-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg shadow-lg z-10 min-w-[120px]">
+                <button
+                  onClick={() => handleImageExport('png')}
+                  className="w-full px-3 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700 first:rounded-t-lg"
+                >
+                  Export PNG
+                </button>
+                <button
+                  onClick={() => handleImageExport('jpg')}
+                  className="w-full px-3 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700"
+                >
+                  Export JPG
+                </button>
+                <button
+                  onClick={() => handleImageExport('jpeg')}
+                  className="w-full px-3 py-2 text-left text-sm hover:bg-slate-100 dark:hover:bg-slate-700 last:rounded-b-lg"
+                >
+                  Export JPEG
+                </button>
+              </div>
+            )}
+          </div>
           <label className="relative">
             <input
               type="file"

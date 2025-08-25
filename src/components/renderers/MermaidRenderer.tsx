@@ -66,7 +66,7 @@ export function MermaidRenderer({ code }: MermaidRendererProps) {
   }
 
   return (
-    <div className="w-full h-full overflow-auto p-4">
+    <div className="w-full h-full overflow-auto p-4" data-diagram-preview>
       <div 
         ref={containerRef}
         className="flex justify-center items-center min-h-full"

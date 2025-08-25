@@ -1,8 +1,7 @@
 import React from 'react';
 import { Header } from './components/Layout/Header';
 import { DiagramInput } from './components/DiagramInput';
-import { DiagramRenderer } from './components/DiagramRenderer';
-import { DiagramEditor } from './components/DiagramEditor';
+import { UnifiedDiagramView } from './components/UnifiedDiagramView';
 import { useTheme } from './hooks/useTheme';
 import { useDiagramData } from './hooks/useDiagramData';
 
@@ -13,22 +12,18 @@ function App() {
     code,
     nodes,
     edges,
-    mode,
     setEngine,
     setCode,
     setNodes,
     setEdges,
-    setMode,
     exportDiagram,
     importDiagram,
+    exportImage,
   } = useDiagramData();
 
-  const handleModeToggle = () => {
-    setMode(mode === 'preview' ? 'editor' : 'preview');
-  };
 
   return (
-    <div className="min-h-screen bg-slate-100 dark:bg-slate-900">
+    <div className={`min-h-screen bg-slate-100 dark:bg-slate-900 ${theme}`}>
       <Header theme={theme} onThemeToggle={toggleTheme} />
       
       <main className="h-[calc(100vh-80px)] flex flex-col lg:flex-row">
@@ -37,29 +32,25 @@ function App() {
           <DiagramInput
             engine={engine}
             code={code}
-            mode={mode}
             onEngineChange={setEngine}
             onCodeChange={setCode}
-            onModeToggle={handleModeToggle}
             onExport={exportDiagram}
             onImport={importDiagram}
+            onExportImage={exportImage}
           />
         </div>
 
         {/* Output Panel */}
         <div className="flex-1 h-1/2 lg:h-full">
-          {mode === 'preview' ? (
-            <DiagramRenderer engine={engine} code={code} />
-          ) : (
-            <DiagramEditor
-              nodes={nodes}
-              edges={edges}
-              engine={engine}
-              code={code}
-              onNodesChange={setNodes}
-              onEdgesChange={setEdges}
-            />
-          )}
+          <UnifiedDiagramView
+            engine={engine}
+            code={code}
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={setNodes}
+            onEdgesChange={setEdges}
+            onCodeChange={setCode}
+          />
         </div>
       </main>
 
@@ -68,10 +59,7 @@ function App() {
         <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-400">
           <div className="flex items-center gap-4">
             <span>Engine: {engine.toUpperCase()}</span>
-            <span>Mode: {mode === 'preview' ? 'Preview' : 'Editor'}</span>
-            {mode === 'editor' && (
-              <span>Nodes: {nodes.length} | Edges: {edges.length}</span>
-            )}
+            <span>Nodes: {nodes.length} | Edges: {edges.length}</span>
           </div>
           <div>
             Ready
