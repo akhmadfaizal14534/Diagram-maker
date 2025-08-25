@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100 dark:bg-slate-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400 dark:bg-slate-500;
+}
+
+/* React Flow custom styles */
+.react-flow__node {
+  @apply font-medium;
+}
+
+.react-flow__edge {
+  @apply stroke-slate-600 dark:stroke-slate-400;
+}
+
+.react-flow__handle {
+  @apply bg-blue-500 dark:bg-blue-400 border-2 border-white dark:border-slate-800;
+}
+
+.react-flow__handle:hover {
+  @apply bg-blue-600 dark:bg-blue-300;
+}
+
+/* Mermaid diagram dark mode support */
+.dark .mermaid svg {
+  background: transparent !important;
+}
+
+.dark .mermaid .node rect,
+.dark .mermaid .node circle,
+.dark .mermaid .node ellipse {
+  fill: #334155 !important;
+  stroke: #64748b !important;
+}
+
+.dark .mermaid .node .label {
+  color: #f1f5f9 !important;
+}
+
+.dark .mermaid .edgeLabel {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* Custom button hover effects */
+.button-hover-lift {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.button-hover-lift:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Smooth transitions for theme switching */
+* {
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
