@@ -136,7 +136,7 @@ export function useDiagramData() {
     setNodes,
     setEdges,
     exportDiagram,
-    importDiagram
+    importDiagram,
     exportImage,
   };
 }
