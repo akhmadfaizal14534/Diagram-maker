@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { DiagramData, DiagramEngine, FlowNode, FlowEdge } from '../types/diagram';
-import html2canvas from 'html2canvas';
 
 const DEFAULT_DIAGRAM_CODE = {
   mermaid: `flowchart LR
@@ -82,6 +81,9 @@ export function useDiagramData() {
 
   const exportImage = useCallback(async (format: 'png' | 'jpg' | 'jpeg') => {
     try {
+      // Dynamically import html2canvas
+      const html2canvas = (await import('html2canvas')).default;
+      
       // Find the diagram preview element
       const previewElement = document.querySelector('[data-diagram-preview]') as HTMLElement;
       if (!previewElement) {
@@ -103,6 +105,7 @@ export function useDiagramData() {
   }, []);
 
   const captureAndDownload = async (element: HTMLElement, format: 'png' | 'jpg' | 'jpeg') => {
+    const html2canvas = (await import('html2canvas')).default;
     const canvas = await html2canvas(element, {
       backgroundColor: format === 'png' ? null : '#ffffff',
       scale: 2, // Higher quality
